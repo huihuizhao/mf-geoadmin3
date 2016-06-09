@@ -137,7 +137,8 @@ goog.require('ga_urlutils_service');
 
     this.$get = function($http, $q, $rootScope, $timeout, $translate,
         gaDefinePropertiesForLayer, gaGlobalOptions, gaMapClick, gaMapUtils,
-        gaNetworkStatus, gaStorage, gaStyleFactory, gaUrlUtils, gaMeasure) {
+        gaNetworkStatus, gaStorage, gaStyleFactory, gaUrlUtils, gaMeasure,
+        gaLayers) {
 
       // Store the parser.
       var kmlFormat;
@@ -324,7 +325,7 @@ goog.require('ga_urlutils_service');
             // tool
             var source = new ol.source.Vector({
               features: sanitizedFeatures,
-              useSpatialIndex: !gaMapUtils.isStoredKmlLayer(options.id)
+              useSpatialIndex: !gaLayers.isStoredKmlLayer(options.id)
             });
 
             var sourceExtent = gaMapUtils.getVectorSourceExtent(source);
@@ -374,7 +375,7 @@ goog.require('ga_urlutils_service');
 
               // If the layer can contain measure features, we register some
               // events to add/remove correctly the overlays
-              if (gaMapUtils.isStoredKmlLayer(olLayer)) {
+              if (gaLayers.isStoredKmlLayer(olLayer)) {
                 if (olLayer.getVisible()) {
                   angular.forEach(olLayer.getSource().getFeatures(),
                       function(feature) {

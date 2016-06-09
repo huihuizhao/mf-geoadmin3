@@ -15,7 +15,7 @@ goog.require('ga_wms_service');
 
   module.provider('gaLayerMetadataPopup', function() {
     this.$get = function($translate, $rootScope, $sce, gaPopup, gaLayers,
-        gaMapUtils, gaWms) {
+        gaWms) {
       var popupContent = '<div ng-bind-html="options.result.html"></div>';
 
       var LayerMetadataPopup = function() {
@@ -30,7 +30,7 @@ goog.require('ga_wms_service');
             var promise;
             if (layer.bodId) {
               promise = gaLayers.getMetaDataOfLayer(layer.bodId);
-            } else if (gaMapUtils.isExternalWmsLayer(layer)) {
+            } else if (gaLayers.isExternalWmsLayer(layer)) {
               promise = gaWms.getLegend(layer);
             }
             return promise.then(function(resp) {

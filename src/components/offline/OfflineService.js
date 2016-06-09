@@ -80,7 +80,7 @@ goog.require('ga_styles_service');
           if (curr && max > curr && curr >= min) {
             return true;
           }
-        } else if (gaMapUtils.isKmlLayer(layer)) {
+        } else if (gaLayers.isKmlLayer(layer)) {
           if (layer instanceof ol.layer.Image) {
             alert($translate.instant('offline_kml_too_big') + ': ' +
                 layer.label);
@@ -217,7 +217,7 @@ goog.require('ga_styles_service');
           var layersIds = gaStorage.getItem(layersKey);
           for (var i = 0, ii = layers.length; i < ii; i++) {
             var layer = layers[i];
-            if (gaMapUtils.isKmlLayer(layer)) {
+            if (gaLayers.isKmlLayer(layer)) {
               continue;
             }
             if (layer instanceof ol.layer.Group) {
@@ -429,7 +429,7 @@ goog.require('ga_styles_service');
             layersOpacity.push(layer.invertedOpacity);
 
             // if the layer is a KML
-            if (gaMapUtils.isKmlLayer(layer) &&
+            if (gaLayers.isKmlLayer(layer) &&
                 /^https?:\/\//.test(layer.url)) {
               $http.get(proxyUrl + encodeURIComponent(layer.url))
                 .success(function(data) {

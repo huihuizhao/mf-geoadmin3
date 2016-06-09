@@ -30,7 +30,7 @@ goog.require('ga_permalink');
   module.directive('gaDraw',
     function($timeout, $translate, $window, $rootScope, gaBrowserSniffer,
         gaDefinePropertiesForLayer, gaDebounce, gaFileStorage, gaLayerFilters,
-        gaExportKml, gaMapUtils, gaPermalink, gaUrlUtils,
+        gaExportKml, gaMapUtils, gaPermalink, gaUrlUtils, gaLayers,
         $document, gaMeasure) {
 
       var createDefaultLayer = function(map, useTemporaryLayer) {
@@ -256,7 +256,7 @@ goog.require('ga_permalink');
               // If there is a layer loaded from public.admin.ch, we use it for
               // modification.
               map.getLayers().forEach(function(item) {
-                if (gaMapUtils.isStoredKmlLayer(item)) {
+                if (gaLayers.isStoredKmlLayer(item)) {
                   layer = item;
                 }
               });
@@ -308,7 +308,7 @@ goog.require('ga_permalink');
             // DnD ...) and the currentlayer has no features, we define a
             // new layer.
             unLayerAdd = map.getLayers().on('add', function(evt) {
-              if (gaMapUtils.isStoredKmlLayer(evt.element) &&
+              if (gaLayers.isStoredKmlLayer(evt.element) &&
                   layer.getSource().getFeatures().length == 0 &&
                   !useTemporaryLayer) {
                 defineLayerToModify();

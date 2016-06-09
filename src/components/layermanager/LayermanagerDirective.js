@@ -47,8 +47,7 @@ goog.require('ga_urlutils_service');
 
   module.directive('gaLayermanager', function($compile, $document, $timeout,
       $rootScope, $translate, $window, gaBrowserSniffer, gaLayerFilters,
-      gaLayerMetadataPopup, gaLayers, gaAttribution, gaUrlUtils,
-      gaMapUtils) {
+      gaLayerMetadataPopup, gaLayers, gaAttribution, gaUrlUtils) {
 
     // Timestamps list template
     var tpl =
@@ -274,13 +273,11 @@ goog.require('ga_urlutils_service');
           map.removeLayer(layer);
         };
 
-        scope.isBodLayer = function(layer) {
-          return layer.bodId && !!gaLayers.getLayer(layer.bodId);
-        };
+        scope.isBodLayer = gaLayers.isBodLayer;
 
         scope.hasMetadata = function(layer) {
           return scope.isBodLayer(layer) ||
-              gaMapUtils.isExternalWmsLayer(layer);
+              gaLayers.isExternalWmsLayer(layer);
         };
 
         scope.showWarning = function(layer) {

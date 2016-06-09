@@ -64,11 +64,11 @@ goog.require('ga_topic_service');
               return;
             }
 
-            if (gaMapUtils.isVectorLayer(l)) {
+            if (gaLayers.isVectorLayer(l)) {
               layersToQuery.vectorLayers.push(l);
             } else if (gaLayers.hasTooltipBodLayer(l)) {
               layersToQuery.bodLayers.push(l);
-            } else if (gaMapUtils.isWMSLayer(l)) {
+            } else if (gaLayers.isWMSLayer(l)) {
               layersToQuery.wmsLayers.push(l);
             }
           });

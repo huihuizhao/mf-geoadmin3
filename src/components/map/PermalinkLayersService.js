@@ -139,7 +139,7 @@ goog.require('ga_wms_service');
           deregFns.length = 0;
 
           angular.forEach(layers, function(layer) {
-            if (gaMapUtils.isStoredKmlLayer(layer)) {
+            if (gaLayers.isStoredKmlLayer(layer)) {
               deregFns.push(scope.$watch(function() {
                 return layer.id;
               }, function() {
@@ -245,7 +245,7 @@ goog.require('ga_wms_service');
                 map.addLayer(layer);
               }
 
-            } else if (gaMapUtils.isKmlLayer(layerSpec)) {
+            } else if (gaLayers.isKmlLayer(layerSpec)) {
 
               // KML layer
               var url = layerSpec.replace('KML||', '');
@@ -262,7 +262,7 @@ goog.require('ga_wms_service');
                 $log.error(e.message);
               }
 
-            } else if (gaMapUtils.isExternalWmsLayer(layerSpec)) {
+            } else if (gaLayers.isExternalWmsLayer(layerSpec)) {
 
               // External WMS layer
               var infos = layerSpec.split('||');

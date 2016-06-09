@@ -926,7 +926,7 @@ goog.require('ga_urlutils_service');
 
         /**
          * Determines if the layer is a bod layer.
-         * @param {ol.layer.Base} an ol layer.
+         * @param {ol.layer.Base} olLayer An ol layer.
          *
          * Returns true if the layer is a BOD layer.
          * Returns false if the layer is not a BOD layer.
@@ -941,7 +941,7 @@ goog.require('ga_urlutils_service');
 
         /**
          * Finds the parent layer bodid if the layer is a child.
-         * @param {ol.layer.Base} an ol layer.
+         * @param {ol.layer.Base} olLayer An ol layer.
          *
          * Returns a bodId of the parent layer.
          * Returns undefined if no parent layer was found
@@ -958,7 +958,7 @@ goog.require('ga_urlutils_service');
          * Determines if the bod layer has a tooltip.
          * Note: the layer is considered to have a tooltip if the parent layer
          * has a tooltip.
-         * @param {ol.layer.Base} an ol layer.
+         * @param {ol.layer.Base} olLayer An ol layer.
          *
          * Returns true if the layer has bod a tooltip.
          * Returns false if the layer doesn't have a bod tooltip.
@@ -975,15 +975,102 @@ goog.require('ga_urlutils_service');
           }
           return !!(bodId && hasTooltip);
         };
-      };
 
+        /** Tests if a layer is a KML layer added by the ImportKML tool or
+         * permalink.
+         * @param {ol.layer.Base|string} olLayerOrId An ol layer or ol layer id.
+         *
+         * Returns true if the layer is a KML.
+         * Returns false if the layer is not a KML.
+         */
+        this.isKmlLayer = function(olLayerOrId) {
+          if (!olLayerOrId) {
+            return false;
+          }
+          if (angular.isString(olLayerOrId)) {
+            return /^KML\|\|/.test(olLayerOrId);
+          }
+          return olLayerOrId.type == 'KML';
+        };
+
+        /** Tests if a layer is KML layer added by dnd.
+         * @param {ol.layer.Base} olLayer An ol layer.
+         *
+         * Returns true if the layer is a KML layer added by dnd.
+         * Returns false if the layer is not a KML layer added by dnd.
+         */
+        this.isLocalKmlLayer = function(olLayer) {
+          return this.isKmlLayer(olLayer) && !/^https?:\/\//.test(olLayer.url);
+        };
+
+        /** Tests if a KML comes from our s3 storage.
+         * @param {ol.layer.Base|string} olLayerOrId An ol layer or ol layer id.
+         *
+         * Returns true if the KML comes from our s3 storage.
+         * Returns false if the KML does not come from our s3 storage.
+         */
+        this.isStoredKmlLayer = function(olLayerOrId) {
+          if (!olLayerOrId) {
+            return false;
+          }
+          // If the parameter is not a string we try to get the url property.
+          var url = (!angular.isString(olLayerOrId)) ? olLayerOrId.url :
+              olLayerOrId.replace('KML||', '');
+          return this.isKmlLayer(olLayerOrId) &&
+                  gaUrlUtils.isPublicValid(url);
+        };
+
+        /** Tests if a layer is an external WMS layer added by th ImportWMS tool
+         * or permalink.
+         * @param {ol.layer.Base|string} olLayerOrId An ol layer or ol layer id.
+         *
+         * Returns true if the layer is an external WMS.
+         * Returns false if the layer is not an external WMS.
+         */
+        this.isExternalWmsLayer = function(olLayerOrId) {
+          if (angular.isString(olLayerOrId)) {
+            return /^WMS\|\|/.test(olLayerOrId) &&
+                olLayerOrId.split('||').length >= 4;
+          }
+          return !!(olLayerOrId && !this.isBodLayer(olLayerOrId) &&
+              this.isWMSLayer(olLayerOrId));
+        };
+
+        /**
+         * Tests if a layer is a vector layer or a vector tile layer.
+         * @param {ol.layer.Base} olLayer An ol layer.
+         *
+         * Returns true if the layer is a Vector
+         * Returns false if the layer is not a Vector
+         */
+        this.isVectorLayer = function(olLayer) {
+          return !!(olLayer && !(olLayer instanceof ol.layer.Group) &&
+              olLayer.getSource() &&
+              (olLayer instanceof ol.layer.Vector ||
+              (olLayer instanceof ol.layer.Image &&
+              olLayer.getSource() instanceof ol.source.ImageVector)));
+        };
+
+        /**
+         * Tests if a layer is a WMS layer.
+         * @param {ol.layer.Base} olLayer An ol layer.
+         *
+         * Returns true if the layer is a WMS
+         * Returns false if the layer is not a WMS
+         */
+        this.isWMSLayer = function(olLayer) {
+          return !!(olLayer && !(olLayer instanceof ol.layer.Group) &&
+              olLayer.getSource &&
+              (olLayer.getSource() instanceof ol.source.ImageWMS ||
+              olLayer.getSource() instanceof ol.source.TileWMS));
+        };
+      };
       return new Layers(this.dfltWmsSubdomains,
           this.dfltWmtsNativeSubdomains, this.dfltWmtsMapProxySubdomains,
           this.wmsUrlTemplate, this.wmtsGetTileUrlTemplate,
           this.wmtsMapProxyGetTileUrlTemplate, this.terrainTileUrlTemplate,
           this.layersConfigUrlTemplate, this.legendUrlTemplate);
     };
-
   });
 
   /**
@@ -1229,50 +1316,6 @@ goog.require('ga_urlutils_service');
           return defer.promise;
         },
 
-        // Test if a layer is a KML layer added by the ImportKML tool or
-        // permalink
-        // @param olLayerOrId  An ol layer or an id of a layer
-        isKmlLayer: function(olLayerOrId) {
-          if (!olLayerOrId) {
-            return false;
-          }
-          if (angular.isString(olLayerOrId)) {
-            return /^KML\|\|/.test(olLayerOrId);
-          }
-          return olLayerOrId.type == 'KML';
-        },
-
-        // Test if a layer is a KML layer added by dnd
-        // @param olLayer  An ol layer
-        isLocalKmlLayer: function(olLayer) {
-          return this.isKmlLayer(olLayer) && !/^https?:\/\//.test(olLayer.url);
-        },
-
-        // Test if a KML comes from our s3 storage
-        // @param olLayer  An ol layer or an id of a layer
-        isStoredKmlLayer: function(olLayerOrId) {
-          if (!olLayerOrId) {
-            return false;
-          }
-          // If the parameter is not a string we try to get the url property.
-          var url = (!angular.isString(olLayerOrId)) ? olLayerOrId.url :
-              olLayerOrId.replace('KML||', '');
-          return this.isKmlLayer(olLayerOrId) &&
-                  gaUrlUtils.isPublicValid(url);
-        },
-
-        // Test if a layer is an external WMS layer added by th ImportWMS tool
-        // or permalink
-        // @param olLayerOrId  An ol layer or an id of a layer
-        isExternalWmsLayer: function(olLayerOrId) {
-          if (angular.isString(olLayerOrId)) {
-            return /^WMS\|\|/.test(olLayerOrId) &&
-                olLayerOrId.split('||').length >= 4;
-          }
-          return !!(olLayerOrId && !olLayerOrId.bodId &&
-              this.isWMSLayer(olLayerOrId));
-        },
-
         // Test if a feature is a measure
         isMeasureFeature: function(olFeature) {
           var regex = /^measure/;
@@ -1385,35 +1428,6 @@ goog.require('ga_urlutils_service');
             });
             return sourceExtent;
           }
-        },
-
-        /**
-         * Tests if a layer is a vector layer or a vector tile layer.
-         * @param {ol.layer.Base} an ol layer.
-         *
-         * Returns true if the layer is a Vector
-         * Returns false if the layer is not a Vector
-         */
-        isVectorLayer: function(olLayer) {
-          return !!(olLayer && !(olLayer instanceof ol.layer.Group) &&
-              olLayer.getSource() &&
-              (olLayer instanceof ol.layer.Vector ||
-              (olLayer instanceof ol.layer.Image &&
-              olLayer.getSource() instanceof ol.source.ImageVector)));
-        },
-
-        /**
-         * Tests if a layer is a WMS layer.
-         * @param {ol.layer.Base} an ol layer.
-         *
-         * Returns true if the layer is a WMS
-         * Returns false if the layer is not a WMS
-         */
-        isWMSLayer: function(olLayer) {
-          return !!(olLayer && !(olLayer instanceof ol.layer.Group) &&
-              olLayer.getSource &&
-              (olLayer.getSource() instanceof ol.source.ImageWMS ||
-              olLayer.getSource() instanceof ol.source.TileWMS));
         }
       };
     };
@@ -1441,7 +1455,7 @@ goog.require('ga_urlutils_service');
         },
         permalinked: function(layer) {
           return layer.displayInLayerManager &&
-              !gaMapUtils.isLocalKmlLayer(layer);
+              !gaLayers.isLocalKmlLayer(layer);
         },
         /**
          * Keep only time enabled layer

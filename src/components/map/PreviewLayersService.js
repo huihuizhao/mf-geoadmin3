@@ -85,7 +85,7 @@ goog.require('ga_wms_service');
           var layers = map.getLayers().getArray();
           for (var i = 0; i < layers.length; i++) {
             if (layers[i].preview && (gaLayers.isBodLayer(layers[i]) ||
-                !gaMapUtils.isVectorLayer(layers[i]))) {
+                !gaLayers.isVectorLayer(layers[i]))) {
               map.removeLayer(layers[i]);
               i--;
             }

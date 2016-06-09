@@ -22,7 +22,9 @@ describe('ga_permalinklayers_service', function() {
       opacity: 0.1,
       visible: false,
       source: new ol.source.Vector({
-        features: kmlFormat.readFeatures('<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2"></kml>')
+        features: kmlFormat.readFeatures('<kml xmlns="http://www.opengis.net/' +
+            'kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" ' +
+            'xmlns:gx="http://www.google.com/kml/ext/2.2"></kml>')
       })
     });
     layer.displayInLayerManager = true;
@@ -43,7 +45,9 @@ describe('ga_permalinklayers_service', function() {
       opacity: 0.1,
       visible: false,
       source: new ol.source.Vector({
-        features: kmlFormat.readFeatures('<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2"></kml>')
+        features: kmlFormat.readFeatures('<kml xmlns="http://www.opengis.net/' +
+            'kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" ' +
+            'xmlns:gx="http://www.google.com/kml/ext/2.2"></kml>')
       })
     });
     layer.displayInLayerManager = true;
@@ -96,9 +100,13 @@ describe('ga_permalinklayers_service', function() {
         };
 
     beforeEach(function() {
+      var layers;
       map = new ol.Map({});
 
       module(function($provide) {
+        inject(function($injector) {
+          layers = $injector.get('gaLayers');
+        });
         $provide.value('gaLayers', {
           loadConfig: function() {
             return def.promise; 
@@ -116,7 +124,8 @@ describe('ga_permalinklayers_service', function() {
             layer.bodId = bodId;
             layer.displayInLayerManager = true;
             return layer;
-          }
+          },
+          isLocalKmlLayer: layers.isLocalKmlLayer
         });
         $provide.value('gaTopic', {
           loadConfig: function() {
@@ -164,7 +173,8 @@ describe('ga_permalinklayers_service', function() {
         });
       });
 
-      inject(function(_gaPermalinkLayersManager_, _gaPermalink_, _gaTopic_, $q) {
+      inject(function(_gaPermalinkLayersManager_, _gaPermalink_,
+          _gaTopic_, $q) {
         def = $q.defer();
         manager = _gaPermalinkLayersManager_;
         permalink = _gaPermalink_;
