@@ -1,6 +1,6 @@
 source rc_dev
 export USERNAME=$(whoami)
-export API_URL=//mf-chsdi3.dev.bgdi.ch/$USERNAME
+export API_URL=//mf-chsdi3.dev.bgdi.ch/teo_color
 export APACHE_BASE_PATH=/$USERNAME
 export E2E_TARGETURL=https://mf-geoadmin3.dev.bgdi.ch/$USERNAME
 export PRINT_URL=//service-print.dev.bgdi.ch/$USERNAME
