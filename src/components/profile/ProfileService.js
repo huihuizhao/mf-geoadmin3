@@ -404,7 +404,7 @@ goog.require('ga_urlutils_service');
           group.append('text')
               .attr('class', 'ga-profile-label ga-profile-label-x')
               .attr('x', width / 2)
-              .attr('y', height + options.margin.bottom - 18)
+              .attr('y', height + options.margin.bottom - 16)
               .style('text-anchor', 'middle')
               .attr('font-size', '0.95em')
               .text($translate.instant(options.xLabel) + ' [' +
