@@ -606,7 +606,7 @@ goog.require('ga_topic_service');
                 }
                 if (!popup) {
                   popup = gaPopup.create({
-                    className: 'ga-tooltip',
+                    className: 'ga-tooltip ga-popup-mobile-bottom',
                     x: x,
                     onCloseCallback: function() {
                       if (onCloseCB) {
