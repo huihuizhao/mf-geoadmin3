@@ -10,13 +10,14 @@ goog.require('ga_profile_service');
   ]);
 
   module.directive('gaProfile', function($rootScope, $compile, $window,
-      gaDebounce, gaProfile, gaMapUtils, gaStyleFactory) {
+      $translate, gaDebounce, gaProfile, gaMapUtils, gaStyleFactory) {
     return {
       restrict: 'A',
       templateUrl: 'components/profile/partials/profile.html',
       scope: {
         feature: '=gaProfile',
         map: '=gaProfileMap',
+        layer: '=gaProfileLayer',
         options: '=gaProfileOptions'
       },
       link: function(scope, element, attrs) {
@@ -114,6 +115,17 @@ goog.require('ga_profile_service');
             item();
           });
         });
+
+        scope.deleteSelectedFeature = function(layer, feature) {
+          if (layer.getSource().getFeatures().length == 1 &&
+              confirm($translate.instant('confirm_remove_all_features'))) {
+            layer.getSource().clear();
+          } else if (confirm($translate.instant(
+              'confirm_remove_selected_features'))) {
+            layer.getSource().removeFeature(feature);
+          }
+          scope.feature = undefined;
+        };
 
         function attachPathListeners(areaChartPath) {
           areaChartPath.on('mousemove', function() {
