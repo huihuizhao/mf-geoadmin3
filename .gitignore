@@ -22,6 +22,8 @@
 /src/lib/Cesium/Widgets
 /re3-translations.json
 rc_branch
+rc_user_*
+
 # FIXME
 # The following are developer-specific and should probably be in the
 # developers' .gitconfig file.
