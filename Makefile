@@ -45,7 +45,7 @@ DEPLOY_ROOT_DIR := /var/www/vhosts/mf-geoadmin3/private/branch
 DEPLOYCONFIG ?=
 OL3_VERSION ?= 27853ea7dd8f4d7416ec9523b5acc2ea7bd43dc4 # a little after v3.16.0, 3 Juin 2016
 OL3_CESIUM_VERSION ?= 2ea22cfa287e6bd4a773a5d93de292c35aabf71c #v1.16, 30 mai 2016
-CESIUM_VERSION ?= 7a6a9581ee76914e59b31a8e2b6369dff8ef03ee # camptocamp/c2c_patches (cesium 1.21), 1 mai 2016
+CESIUM_VERSION ?= 1523b1de41beef6067e08ed9cc58423012d8a8c7 # oterral/c2c_patches_3dtileslabel, 20 july 2016
 DEFAULT_TOPIC_ID ?= ech
 TRANSLATION_FALLBACK_CODE ?= de
 LANGUAGES ?= '[\"de\", \"en\", \"fr\", \"it\", \"rm\"]'
@@ -283,7 +283,7 @@ ol3cesium: .build-artefacts/ol3-cesium
 	npm install --production; \
 	node tasks/build-ext.js; \
 	cd ../cesium; \
-	git remote | grep c2c || git remote add c2c git://github.com/camptocamp/cesium; \
+	git remote | grep c2c || git remote add c2c git://github.com/oterral/cesium; \
 	git fetch --all; \
 	git checkout $(CESIUM_VERSION); \
 	cd ..; \
