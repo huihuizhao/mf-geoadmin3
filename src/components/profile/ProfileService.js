@@ -616,27 +616,41 @@ goog.require('ga_urlutils_service');
               .text(gaTimeFormatFilter(this.hikTime));
         };
 
-        this.update = function(data, size) {
+        this.update = function(data, size, noTransition) {
           var that = this;
-          var transitionTime = 1500;
+          var transitionTime = (noTransition) ? 0 : 1500;
+          var svg = this.svg;
+          var path = this.group.select('.ga-profile-area');
+          var gX = this.group.select('g.x');
+          var gY = this.group.select('g.y');
+          var gGridX = this.group.select('g.ga-profile-grid-x');
+          var gGridY = this.group.select('g.ga-profile-grid-y');
+          var textLabelX = this.group.select('text.ga-profile-label-x');
+          var textLabelLgd = this.group.select('text.ga-profile-legend');
+
           if (size) {
-            transitionTime = 250;
+            transitionTime = (noTransition) ? 0 : 250;
             width = size[0] - marginHoriz;
             height = size[1] - marginVert;
-            this.svg.transition().duration(transitionTime)
-              .attr('width', width + marginHoriz)
-              .attr('height', height + marginVert)
-              .attr('class', 'ga-profile-svg');
-            this.group.select('text.ga-profile-label-x')
-              .transition().duration(transitionTime)
-                .attr('x', width / 2)
+
+            if (transitionTime) {
+              svg = svg.transition().duration(transitionTime);
+              textLabelX = textLabelX.transition().duration(transitionTime);
+              textLabelLgd = textLabelLgd.transition().duration(transitionTime);
+            }
+
+            svg.attr('width', width + marginHoriz)
+                .attr('height', height + marginVert)
+                .attr('class', 'ga-profile-svg');
+
+            textLabelX.attr('x', width / 2)
                 .attr('y', height + options.margin.bottom - 18)
                 .style('text-anchor', 'middle');
-            this.group.select('text.ga-profile-legend')
-              .transition().duration(transitionTime)
-                .attr('x', width - 118)
+
+            textLabelLgd.attr('x', width - 118)
                 .attr('y', 11)
                 .text('swissALTI3D/DHM25');
+
           } else {
             this.diff = this.elevDiff(data);
             this.twoDiff = this.twoElevDiff(data);
@@ -644,7 +658,6 @@ goog.require('ga_urlutils_service');
             this.dist = this.distance(data);
             this.slopeDist = this.slopeDistance(data);
             this.hikTime = this.hikingTime(data);
-
             this.data = this.formatData(data);
           }
           var x = d3.scale.linear().range([0, width]);
@@ -652,30 +665,30 @@ goog.require('ga_urlutils_service');
           this.domain = getXYDomains(x, y, elevationModel, that.data);
           var axis = createAxis(this.domain);
           var area = createArea(this.domain, height, elevationModel);
-          var path = this.group.select('.ga-profile-area');
-          path.datum(that.data)
-            .transition().duration(transitionTime)
-              .attr('class', 'ga-profile-area')
+          path = path.datum(that.data);
+
+          if (transitionTime) {
+            path = path.transition().duration(transitionTime);
+            gX = gX.transition().duration(transitionTime);
+            gY = gY.transition().duration(transitionTime);
+            gGridX = gGridX.transition().duration(transitionTime);
+            gGridY = gGridY.transition().duration(transitionTime);
+          }
+
+          path.attr('class', 'ga-profile-area')
               .attr('d', area);
 
-          this.group.select('g.x')
-            .transition().duration(transitionTime)
-              .call(axis.X);
-          this.group.select('g.y')
-            .transition().duration(transitionTime)
-              .call(axis.Y);
-          this.group.select('g.ga-profile-grid-x')
-            .transition().duration(transitionTime)
-              .call(axis.X
-                  .tickSize(-height, 0, 0)
-                  .tickFormat('')
-              );
-          this.group.select('g.ga-profile-grid-y')
-            .transition().duration(transitionTime)
-              .call(axis.Y
-                  .tickSize(-width, 0, 0)
-                  .tickFormat('')
-              );
+          gX.call(axis.X);
+          gY.call(axis.Y);
+
+          gGridX.call(axis.X
+              .tickSize(-height, 0, 0)
+              .tickFormat('')
+          );
+          gGridY.call(axis.Y
+              .tickSize(-width, 0, 0)
+              .tickFormat('')
+          );
         };
       }
       return function(options) {

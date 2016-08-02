@@ -56,11 +56,27 @@ goog.require('ga_profile_service');
         };
         var updateDebounced = gaDebounce.debounce(update, 133, false, false);
 
-        var updateSize = function(size) {
-          profile.update(null, size);
+        var updateSize = function(size, noTransition) {
+          profile.update(null, size, noTransition);
         };
         var updateSizeDebounced = gaDebounce.debounce(updateSize, 133, false,
             false);
+
+        // Resize the profile on gaPrint events to fit the A4 portrait size
+        scope.$on('gaPrintBefore', function() {
+          updateSize([
+            700, // A4 width, totally arbitrary size
+            element.height()
+          ], true);
+        });
+
+        scope.$on('gaPrintAfter', function() {
+          updateSize([
+            element.width(),
+            element.height()
+          ], true);
+        });
+
 
         $($window).on('resize', function() {
           if (isProfileCreated) {
