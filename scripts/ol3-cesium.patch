@@ -1,0 +1,67 @@
+diff --git a/Cesium.externs.js b/Cesium.externs.js
+index 827eaa7..0fc952f 100644
+--- a/Cesium.externs.js
++++ b/Cesium.externs.js
+@@ -2580,6 +2580,27 @@ Cesium.DataSource = function() {};
+ /**
+  * @constructor
+  */
++Cesium.KmlDataSource = function() {};
++
++/**
++ * @typedef {{
++ *   camera: Cesium.Camera,
++ *   canvas: HTMLCanvasElement,
++ *   proxy: (Cesium.DefaultProxy|string)
++ * }}
++ */
++Cesium.KmlDataSourceLoadOptions;
++
++/**
++ * @param {string} url
++ * @param {!Cesium.KmlDataSourceLoadOptions} options
++ * @returns {Cesium.DataSource|Promise.<Cesium.DataSource>}
++ */
++Cesium.KmlDataSource.load = function(url, options) {};
++
++/**
++ * @constructor
++ */
+ Cesium.DataSourceCollection = function() {};
+ 
+ /**
+diff --git a/externs/olcsx.js b/externs/olcsx.js
+index a697178..b520a5a 100644
+--- a/externs/olcsx.js
++++ b/externs/olcsx.js
+@@ -10,7 +10,7 @@ var olcsx;
+  * @typedef {{
+  *   map: (!ol.Map),
+  *   target: (Element|string|undefined),
+- *   createSynchronizers: (undefined|function(!ol.Map, !Cesium.Scene): Array.<olcs.AbstractSynchronizer>),
++ *   createSynchronizers: (undefined|function(!ol.Map, !Cesium.Scene, !Cesium.DataSourceCollection): Array.<olcs.AbstractSynchronizer>),
+  *   sceneOptions: (Cesium.SceneOptions|undefined)
+  * }}
+  * @api
+@@ -45,7 +45,7 @@ olcsx.OLCesiumOptions.prototype.target;
+  * constructor to create custom synchronizers. Receives an `ol.Map` and a
+  * `Cesium.Scene` as arguments, and needs to return an array of
+  * {@link olcs.AbstractSynchronizer}.
+- * @type {undefined|function(!ol.Map, !Cesium.Scene): Array.<olcs.AbstractSynchronizer>}
++ * @type {undefined|function(!ol.Map, !Cesium.Scene, !Cesium.DataSourceCollection): Array.<olcs.AbstractSynchronizer>}
+  * @api
+  */
+ olcsx.OLCesiumOptions.prototype.createSynchronizers;
+diff --git a/src/ol3cesium.js b/src/ol3cesium.js
+index 525eaed..c49ba7f 100644
+--- a/src/ol3cesium.js
++++ b/src/ol3cesium.js
+@@ -174,7 +174,7 @@ olcs.OLCesium = function(options) {
+   });
+ 
+   var synchronizers = goog.isDef(options.createSynchronizers) ?
+-      options.createSynchronizers(this.map_, this.scene_) : [
++      options.createSynchronizers(this.map_, this.scene_, this.dataSourceCollection_) : [
+         new olcs.RasterSynchronizer(this.map_, this.scene_),
+         new olcs.VectorSynchronizer(this.map_, this.scene_)
+       ];

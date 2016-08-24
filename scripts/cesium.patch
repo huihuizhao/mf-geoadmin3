@@ -1,0 +1,13 @@
+diff --git a/Source/Core/DefaultProxy.js b/Source/Core/DefaultProxy.js
+index 5667055..46a75f0 100644
+--- a/Source/Core/DefaultProxy.js
++++ b/Source/Core/DefaultProxy.js
+@@ -22,7 +22,7 @@ define(function() {
+      * @returns {String} proxied resource
+      */
+     DefaultProxy.prototype.getURL = function(resource) {
+-        return this.proxy + '?' + encodeURIComponent(resource);
++        return this.proxy + encodeURIComponent(resource);
+     };
+ 
+     return DefaultProxy;
