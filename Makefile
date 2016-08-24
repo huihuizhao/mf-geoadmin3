@@ -270,6 +270,7 @@ ol3cesium: .build-artefacts/ol3-cesium
 	git fetch --all; \
 	git checkout $(OL3_CESIUM_VERSION); \
 	git submodule update --recursive --init --force; \
+	git apply ../../scripts/ol3-cesium.patch; \
 	cd ol3; \
 	git reset HEAD --hard; \
 	git fetch --all; \
@@ -286,6 +287,7 @@ ol3cesium: .build-artefacts/ol3-cesium
 	git remote | grep c2c || git remote add c2c git://github.com/camptocamp/cesium; \
 	git fetch --all; \
 	git checkout $(CESIUM_VERSION); \
+	git apply ../../../scripts/cesium.patch; \
 	cd ..; \
 	git show; \
 	ln -T -f -s ../../../../ol3-cesium-plugin/ src/plugins/geoadmin; \
