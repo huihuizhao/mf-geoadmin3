@@ -739,7 +739,7 @@ itemscope itemtype="http://schema.org/WebApplication"
 
         var defaultApiUrl = prtl + '${api_url}';
         var apiUrl = setBackend(defaultApiUrl, prtl + '${api_tech_url}', 'api_url');
-        var mapproxyUrl = setBackend(prtl + '${mapproxy_url}', prtl + '${mapproxy_tech_url}', 'mapproxy_url');
+        var mapproxyUrl = '//wmts{s}.bgdi.ch';
         var wmsUrl = setBackend(prtl + '${wms_url}',  prtl + '${wms_tech_url}', 'wms_url');
         var shopUrl = setBackend(prtl + '${shop_url}', prtl + '${shop_tech_url}', 'shop_url');
         var publicUrl = setBackend(prtl + '${public_url}', prtl + '${public_tech_url}', 'public_url');
