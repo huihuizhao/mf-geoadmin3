@@ -82,6 +82,26 @@ goog.require('ga_urlutils_service');
             return baseEmbed + '?' + gaUrlUtils.toKeyValue(newParams);
           };
 
+          this.getImgHref = function(p) {
+            var newParams = angular.extend({}, params);
+            if (angular.isDefined(p)) {
+              angular.extend(newParams, p);
+            }
+            if (angular.isDefined(newParams.mobile)) {
+              delete newParams.mobile;
+            }
+            var baseImg = base.replace(/^http:/, 'https:').
+                replace(/(index|mobile)\.html$/, 'img.html');
+            if (!/img\.html$/.test(baseImg)) {
+              if (!/\/$/.test(baseImg)) {
+                baseImg += '/';
+              }
+              baseImg += 'img.html';
+            }
+            return baseImg + '?' + gaUrlUtils.toKeyValue(newParams);
+          };
+
+
           // The main href is the embed permalink but without the name of
           // the html page.
           this.getMainHref = function(p) {

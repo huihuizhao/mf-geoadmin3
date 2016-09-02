@@ -219,7 +219,7 @@ def upload(bucket_name, base_dir, deploy_target):
     print('%s' % s3_dir_path)
     upload_directories = ['prd', 'src']
     exclude_filename_patterns = ['.less', '.gitignore', '.mako.']
-    root_files = ('index.html', 'mobile.html', 'embed.html',
+    root_files = ('index.html', 'mobile.html', 'embed.html', 'img.html',
                   'robots.txt', 'robots_prod.txt', 'favicon.ico',
                   'checker', 'geoadmin.%s.appcache' % version)
 
@@ -341,7 +341,7 @@ def delete_version(s3_path, bucket_name):
         files = bucket.objects.filter(Prefix=str(s3_path)).all()
 
         indexes = [{'Key': k.key} for k in files]
-        for n in ('index', 'embed', 'mobile'):
+        for n in ('index', 'embed', 'mobile', 'img'):
             src_key_name = '{}.{}.html'.format(n, s3_path)
             indexes.append({'Key': src_key_name})
 
@@ -366,7 +366,7 @@ def activate_version(s3_path, bucket_name, deploy_target):
     msg = raw_input('Are you sure you want to activate version <%s>?\n' % s3_path)
     if msg.lower() in ('y', 'yes'):
         # Prod files
-        for n in ('index', 'embed', 'mobile'):
+        for n in ('index', 'embed', 'mobile', 'img'):
             src_key_name = '{}/{}.html'.format(s3_path, n)
             print('{} --> {}.html'.format(src_key_name, n))
             s3client.copy_object(

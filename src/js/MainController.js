@@ -78,6 +78,14 @@ goog.require('ga_topic_service');
         viewport.removeClass(dragClass);
       });
 
+      // Expose map gloabally - TODO: remove this
+      $window.mymap = map;
+      map.once('precompose', function(event) {
+        $window.mycanvas = event.context.canvas;
+        console.log($window.mycanvas);
+      });
+      // End of hack
+
       return map;
     };
 
@@ -255,6 +263,7 @@ goog.require('ga_topic_service');
       animation: gaBrowserSniffer.animation,
       offline: gaNetworkStatus.offline,
       embed: gaBrowserSniffer.embed,
+      img: gaBrowserSniffer.img,
       pulldownShown: !(gaBrowserSniffer.mobile || win.width() <= 1024),
       printShown: false,
       catalogShown: false,
