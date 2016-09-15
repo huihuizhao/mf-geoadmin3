@@ -164,6 +164,7 @@ def _save_to_s3(in_data, dest, mimetype, bucket_name, compress=True, cached=True
     extra_args['ACL'] = 'public-read'
     extra_args['ContentType'] = mimetype
     extra_args['CacheControl'] = cache_control
+    extra_args['X-UA-Compatible'] = 'IE=Edge'
 
     try:
         print('Uploading to %s - %s, gzip: %s, cache headers: %s' % (dest, mimetype, compressed, cached))
