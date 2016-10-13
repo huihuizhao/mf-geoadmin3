@@ -154,6 +154,7 @@
       "ol3/externs/geojson.js",
       "ol3/externs/bingmaps.js",
       "ol3/externs/closure-compiler.js",
+      "ngeo/externs/ngeox.js",
       "Cesium.externs.js"
     ],
     "define": [

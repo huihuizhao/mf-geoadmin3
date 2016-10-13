@@ -276,6 +276,7 @@ ol3cesium: .build-artefacts/ol3-cesium
 	git fetch --all; \
 	git checkout $(OL3_CESIUM_VERSION); \
 	git submodule update --recursive --init --force; \
+	git clone https://github.com/camptocamp/ngeo; \
 	cd ol3; \
 	git reset HEAD --hard; \
 	git fetch --all; \
@@ -301,13 +302,19 @@ ol3cesium: .build-artefacts/ol3-cesium
 	npm install; \
 	node build/generate-exports.js dist/exports.js; \
 	node build/build.js build/ol3cesium-debug.json dist/ol3cesium-debug.js; \
-	node build/build.js ../../scripts/ol3cesium-geoadmin.json dist/ol3cesium.js; \
 	cp dist/ol3cesium-debug.js ../../src/lib/; \
 	cp dist/ol3cesium.js ../../src/lib/ol3cesium.js; \
 	rm -rf ../../src/lib/Cesium; \
 	cp -r cesium/Build/CesiumUnminified ../../src/lib/Cesium; \
 	cp cesium/Build/Cesium/Cesium.js ../../src/lib/Cesium.min.js; \
 	cp Cesium.externs.js ../../externs/Cesium.externs.js;
+
+.PHONY: ngeo
+ngeo: .build-artefacts/ngeo
+	cd .build-artefacts/ngeo; \
+	make dist; \
+	cp dist/ngeo-debug.js ../../src/lib/ngeo-debug.js; \
+	cp dist/ngeo.js ../../src/lib/ngeo.js;
 
 .PHONY: filesaver
 filesaver: .build-artefacts/filesaver
@@ -746,6 +753,9 @@ ${PYTHON_VENV}:
 
 .build-artefacts/ol3-cesium:
 	git clone --recursive https://github.com/openlayers/ol3-cesium.git $@
+
+.build-artefacts/ngeo:
+	git clone https://github.com/camptocamp/ngeo $@
 
 # No npm module
 .build-artefacts/filesaver:
