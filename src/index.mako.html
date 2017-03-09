@@ -797,7 +797,7 @@ itemscope itemtype="http://schema.org/WebApplication"
         var shopUrl = setBackend(prtl + '${shop_url}', prtl + '${shop_tech_url}', 'shop_url');
         var publicUrl = setBackend(prtl + '${public_url}', prtl + '${public_tech_url}', 'public_url');
         var printUrl = setBackend(prtl + '${print_url}', prtl + '${print_tech_url}', 'print_url');
-        var proxyUrl = prtl + '{proxy_url}' + '/';
+        var proxyUrl = prtl + '${proxy_url}' + '/';
         var apiOverwrite = !!(getParam('api_url') || env);
 
         module.constant('gaGlobalOptions', {
