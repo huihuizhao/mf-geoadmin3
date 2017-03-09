@@ -72,14 +72,14 @@ goog.provide('ga_urlutils_service');
         };
 
         this.proxifyUrl = function(url) {
+          var that = this;
           var deferred = $q.defer();
           if (!this.isBlob(url) && this.isHttps(url) &&
               !this.isAdminValid(url) && !/.*kmz$/.test(url)) {
             this.isCorsEnabled(url).then(function(enabled) {
               deferred.resolve(url);
             }, function() {
-              deferred.resolve(
-                  gaGlobalOptions.ogcproxyUrl + encodeURIComponent(url));
+              deferred.resolve(that.buildProxyUrl(url));
             });
           } else {
             deferred.resolve(this.proxifyUrlInstant(url));
