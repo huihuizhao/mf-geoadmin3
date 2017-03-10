@@ -32,7 +32,7 @@ LAST_PUBLIC_URL := $(shell if [ -f .build-artefacts/last-public-url ];  then cat
 PRINT_URL ?= //print.geo.admin.ch
 PRINT_TECH_URL ?= //service-print.
 LAST_PRINT_URL := $(shell if [ -f .build-artefacts/last-print-url ]; then cat .build-artefacts/last-print-url 2> /dev/null; else echo '-none-'; fi)
-PROXY_URL ?= //2un8jfcpjl.execute-api.eu-west-1.amazonaws.com/dev
+PROXY_URL ?= //pondvarz5b.execute-api.eu-west-1.amazonaws.com/prod
 LAST_PROXY_URL ?= $(shell if [ -f .build-artefacts/last-proxy-ulr ]; then cat .build-artefacts/last-proxy-url 2> /dev/null; else echo '-none-'; fi)
 
 PUBLIC_URL_REGEXP ?= ^https?:\/\/public\..*\.(bgdi|admin)\.ch\/.*

@@ -10,4 +10,4 @@ export WMS_URL=//wms-bgdi.int.bgdi.ch
 export SHOP_URL=//shop-bgdi.int.bgdi.ch
 export PUBLIC_URL=//public.int.bgdi.ch
 export PRINT_URL=//service-print.int.ch
-export PROXY_URL=//2un8jfcpjl.execute-api.eu-west-1.amazonaws.com/dev
+export PROXY_URL=//i87vv9meee.execute-api.eu-west-1.amazonaws.com/int
